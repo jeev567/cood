@@ -7,19 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("v1/")
+@RequestMapping("/v1")
 public class SecretController {
 
     @Autowired
     private SecretService secretService;
 
-
-    @GetMapping("secret/{encoded-my-secret}")
-    public String getSecret(@RequestParam String encodedMySecret){
-        return secretService.getSecret(new Secret(encodedMySecret));
+    @GetMapping("/secret/{encoded-secret}")
+    public String getSecret(@PathVariable(value ="encoded-secret")  String encodedSecret){
+        System.out.println(encodedSecret);
+        return secretService.getSecret(new Secret(encodedSecret));
     }
 
-    @PostMapping("secret/")
+    @PostMapping("/secret")
     public String createSecret(@RequestBody Secret secret){
         return secretService.createSecret(secret);
     }

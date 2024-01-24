@@ -19,11 +19,18 @@ import java.util.Base64;
 @Service
 public class PasswordServiceImpl implements PasswordService {
 
-    @Autowired
-    private Properties properties;
 
-    byte[] salt = properties.getApplicationSecretSalt().getBytes();
-    private String password = properties.getApplicationEncodeDecodePassword();
+    private Properties properties;
+    byte[] salt;
+    private String password;
+    @Autowired
+    public PasswordServiceImpl(Properties properties){
+        this.properties = properties;
+        this.salt = properties.getApplicationSecretSalt().getBytes();
+        this.password = properties.getApplicationEncodeDecodePassword();
+    }
+
+
 
 
 
@@ -57,11 +64,12 @@ public class PasswordServiceImpl implements PasswordService {
         try {
 
             byte[] combined = Base64.getDecoder().decode(encryptedData);
-            byte[] extractedSalt = new byte[16];
-            byte[] extractedData = new byte[combined.length - 16];
 
-            System.arraycopy(combined, 0, extractedSalt, 0, 16);
-            System.arraycopy(combined, 16, extractedData, 0, combined.length - 16);
+            byte[] extractedSalt = new byte[properties.getApplicationSecretSalt().length()];
+            byte[] extractedData = new byte[combined.length - properties.getApplicationSecretSalt().length()];
+
+            System.arraycopy(combined, 0, extractedSalt, 0, properties.getApplicationSecretSalt().length());
+            System.arraycopy(combined, properties.getApplicationSecretSalt().length(), extractedData, 0, combined.length - properties.getApplicationSecretSalt().length());
 
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
             KeySpec spec = new PBEKeySpec(password.toCharArray(), extractedSalt, 65536, 256);

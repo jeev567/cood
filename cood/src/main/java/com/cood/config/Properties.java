@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Properties {
+
     @Value("${application-secret-salt}")
     private String applicationSecretSalt;
     @Value("${application-encode-decode-password}")
@@ -18,5 +19,13 @@ public class Properties {
 
     public String getApplicationEncodeDecodePassword() {
         return applicationEncodeDecodePassword;
+    }
+
+    public void setApplicationSecretSalt(String applicationSecretSalt) {
+        this.applicationSecretSalt = applicationSecretSalt;
+    }
+
+    public void setApplicationEncodeDecodePassword(String applicationEncodeDecodePassword) {
+        this.applicationEncodeDecodePassword = applicationEncodeDecodePassword;
     }
 }
